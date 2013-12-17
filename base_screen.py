@@ -31,16 +31,32 @@ class BaseScreen():
     Raise a ChangeScreenException to change screen.
     """
     def __init__(self, width, height, background=None):
-        """ Init of baseScreen."""
+        """ Init of baseScreen.
+        
+        Save the background :
+        -  BEFORE init_entities_before ( sprite )
+        -  AFTER init_entities_after 
+           (Attach entities or text to background)
+        so init_entities save elements with background
+        init_entities
+        """
         self.surface = Surface((width, height))        
         if background is not None:
-            self.background = background
-            bg = pygame.image.load(background).convert_alpha()
-            self.surface.blit(bg, bg.get_rect())
-        self.init_entities(self.surface)
+            self.surface.blit(background, background.get_rect())
+        self.init_entities_before(self.surface)
+        self.background = self.surface.copy()
+        self.init_entities_after(self.surface)
 
-    def init_entities(self, surface):
-        """ Create entities. Need to be redefined"""
+    def init_entities_after(self, surface):
+        """ Create entities after saving background.
+
+        Need to be redefined"""
+        pass
+
+    def init_entities_before(self, surface):
+        """ Create entities before saving background.
+
+        Need to be redefined"""
         pass
     
     def main_loop(self):
@@ -60,8 +76,11 @@ class BaseScreen():
         pass
     
     def erase_all_map(self):
-        bg = pygame.image.load(self.background).convert_alpha()
-        self.surface.blit(bg, bg.get_rect())
+        """ Erase all background
+
+        Can redefine this function
+        """
+        self.surface = self.background.copy()
         
     def draw(self, surface):
         """ Draw entities in the surface.
