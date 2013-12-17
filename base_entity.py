@@ -1,11 +1,8 @@
 #-*- coding: utf-8 -*-
 
-from pygame.locals import K_LEFT as LEFT
-from pygame.locals import K_DOWN as DOWN 
 from pygame.locals import K_UP as UP
-from pygame.locals import K_RIGHT as RIGHT
 
-from pygame.sprite import Sprite
+from pygame.sprite import Sprite, RenderUpdates as Group
 from pygame.rect import Rect
 
 from base_animation import BaseAnimation
@@ -40,12 +37,27 @@ class BaseEntity(Sprite):
         self.name = name
         self.rect = None
         self.image = None
+        self.childs = Group()
         self.rect_collapse = Rect(rect_data)
         self.speed = speed
-        self.direction = DOWN
+        self.direction = UP
         # Create animation for the entity
         self.animation = self.init_animation(max_frame, max_frame_delay, img)
+        
+    def add_child(self, child):
+        """Add a child entity."""
+        self.childs.add(child)
+
+    def remove_child(self, child):
+        """Remove a child entity."""
+        self.childs.remove(child)
     
+    def direction_get(self):
+        return self.direction
+
+    def direction_set(self, direction):
+        self.direction = direction
+
     def get_rect(self, value=0):
         """Return rect 
         
@@ -111,7 +123,8 @@ class BaseEntity(Sprite):
     def update(self, movement = None):
         """Update function.
         
-        Basic update position of the entity (move)
+        Basic update position of the entity (move or stop)
+        Redefine it for your own purpose
         Action use by pygame.sprite.Group.update() function.
         """
         if movement is None:
@@ -121,8 +134,9 @@ class BaseEntity(Sprite):
             self.direction = movement
             self.move(movement)
             self.animation.update()
-
+        
         self.setup_animation(self.direction)
+        self.childs.update()
 
     def setup_collapse(self):
         """Setup variable.
@@ -142,4 +156,4 @@ class BaseEntity(Sprite):
         rect_anim_position = self.image.get_rect()
         rect_anim_position.center = self.rect_collapse.center
         self.rect = rect_anim_position
-        #print '%s : %s' % (self.name,self.rect)
+        
