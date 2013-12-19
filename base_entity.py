@@ -2,10 +2,11 @@
 
 from pygame.locals import K_UP as UP
 
-from pygame.sprite import Sprite, RenderUpdates as Group
+from pygame.sprite import Sprite
 from pygame.rect import Rect
 
 from base_animation import BaseAnimation
+from base_group import Group
 
 class BaseEntity(Sprite):
     """Base Class Entity to use for games entity.
@@ -143,6 +144,8 @@ class BaseEntity(Sprite):
                 
         Set up rect attribute for collapse eval"""
         self.rect = self.rect_collapse
+        for sprite in self.childs:
+            sprite.setup_collapse()
     
     def setup_animation(self, direction):
         """Setup variable.
