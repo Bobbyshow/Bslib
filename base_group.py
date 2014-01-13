@@ -8,7 +8,7 @@ class Group(RenderUpdates):
     """Default group.
     
     Same use as RenderUpdates groups.
-    Custom use with draw function : Draw child.
+    Custom use with draw function : Draw sprite's child.
     """
     __max_loop = 3
     loop = 0
@@ -21,7 +21,6 @@ class Group(RenderUpdates):
         dirty_append = dirty.append
         for s in self.sprites():
             childs = s.childs
-            print childs.sprites()
             if childs.sprites() != []:
                 dirty_append(childs.draw(surface))
             r = spritedict[s]

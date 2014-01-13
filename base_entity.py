@@ -147,7 +147,7 @@ class BaseEntity(Sprite):
         for sprite in self.childs:
             sprite.setup_collapse()
     
-    def setup_animation(self, direction):
+    def setup_animation(self, direction=None):
         """Setup variable.
 
         Set up rect attribute for animation draw

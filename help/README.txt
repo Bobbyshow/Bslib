@@ -1,6 +1,5 @@
 +---------------------------+
 |                           |
-|      Bobbyshow            |
 |                           |
 |       README.txt  =)      |
 |                           |
@@ -27,7 +26,13 @@ Use to manage easier some complicated elements.
      (Today, only the same duration is enable)
      ###################
 
-
+--> BaseButton :
+    Use to create Button with default behavior
+    A button is a small (or big) area, where you can click and 
+    provok a Event.
+    To raise a event with a button, it need to be focused AND clicked
+    (You can't click on button without focus, or you're amazing =) ).
+     
 --> BaseScreen :
     Use to manage screen of games
     Use for exec main_loop, update screen, and draw screen.
@@ -45,10 +50,10 @@ Use to manage easier some complicated elements.
     +-------+
     
     To do this, you can raise a ChangeScreenException to change screen.
-    And catch this Exception in the main loop and so change the used screen.
+    And catch this Exception in the main loop.
 
     So, you can change the used screen AND keep the screen in paused state 
-    and used again if it's necessary (like game -> pause ->continue game
+    and used again if it's necessary (like game -> pause -> continue game
     or game -> paused -> save and exit)
 
     That's all for now. Need some checks and more options to manage more easily 

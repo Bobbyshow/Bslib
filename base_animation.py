@@ -62,7 +62,7 @@ class BaseAnimation(Surface):
         self.frame = 0
         self.frame_delay = 0
 
-    def get_sprite(self, direction):
+    def get_sprite(self, direction=None):
         """Custom get_rect_anim
 
         Return SubSurface (Surface) for the animation.

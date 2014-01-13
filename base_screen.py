@@ -4,6 +4,14 @@ import pygame.image
 from pygame.surface import Surface
 
 class ChangeScreenException(Exception):
+    """Class ChangeScreenException use to change screen.
+
+    Extends Exception.
+    Use to prevent that the screen need to be changed.
+    The screen who raised this is interrupted and give a value
+    and a message.
+    """
+
     def __init__(self, value, msg):
         self.value = value
         self.msg = msg
@@ -34,8 +42,8 @@ class BaseScreen():
         """ Init of baseScreen.
         
         Save the background :
-        -  BEFORE init_entities_before ( sprite )
-        -  AFTER init_entities_after 
+        -  AFTER  init_entities_before ( sprite )
+        -  BEFORE init_entities_after 
            (Attach entities or text to background)
         so init_entities save elements with background
         init_entities
