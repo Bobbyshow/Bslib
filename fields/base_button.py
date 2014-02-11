@@ -30,9 +30,10 @@ class BaseButtonAnimation(BaseAnimation):
     """Base Class Button Animation.
     
     Default animation for buttons style
+    Just a example.
     """
-    WIDTH = 100
-    HEIGHT = 50
+    WIDTH = 22
+    HEIGHT = 33
 
     def get_sprite(self, move_direction):
         frame = self.subsurface(
@@ -160,4 +161,5 @@ class BaseButton(BaseEntity):
         """Custom Update.
 
         """
+        self.update_state()
         self.setup_animation()
