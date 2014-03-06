@@ -25,14 +25,25 @@ class BaseEntity(Sprite):
         LEFT = 276
     - speed : list of speed mvt : [abs, ord]
     """
-    def __init__(self, name, rect_data, speed, max_frame, max_frame_delay, img):
+
+    STATUS = []
+
+    def __init__(
+        self,
+        name,
+        rect_data,
+        speed,
+        max_frame,
+        max_frame_delay,
+        img,
+        direction=None
+    ):
         """ Init.
         - rect_data : list contains =>
         - x : position x
         - y : position y
         - w : width of rect_collapse
         - h : height of collase
-        - direction
         """
         super(BaseEntity, self).__init__()
         self.name = name
@@ -41,7 +52,15 @@ class BaseEntity(Sprite):
         self.childs = Group()
         self.rect_collapse = Rect(rect_data)
         self.speed = speed
-        self.direction = UP
+        if direction is None:
+            self.direction = UP
+        else:
+            self.direction = direction
+        self.actual_state = 'STOP'
+        self.state = ['STOP','MOVE']
+        for state in self.STATUS:
+            self.state.append(state)
+        
         # Create animation for the entity
         self.animation = self.init_animation(max_frame, max_frame_delay, img)
         
@@ -81,15 +100,15 @@ class BaseEntity(Sprite):
         pass
 
     def __str__(self):
-       """Custom __str__."""
-       string = (
-           u"<Entity : %s -- Pos (%s,%s)>\n" % (
-               str(self.name),
-               str(self.rect_collapse[0]),
-               str(self.rect_collapse[1]),
-           )           
-       )
-       return string
+        """Custom __str__."""
+        string = (
+            u"<Entity : %s -- Pos (%s,%s)>\n" % (
+                str(self.name),
+                str(self.rect_collapse[0]),
+                str(self.rect_collapse[1]),
+            )           
+        )
+        return string
 
     def move(self, move_direction):
         """Basic mouvement.
@@ -97,21 +116,7 @@ class BaseEntity(Sprite):
         Basic calcul tomove the entity, defined by direction parameter
         Reimplements if you need to change move's pattern
         """
-        x, y = self.rect_collapse.topleft
-        direction_num = move_direction - UP
-        if direction_num == 0:
-            move = (0, -1)
-        elif direction_num == 1:
-            move = (0, 1)
-        elif direction_num == 2:
-            move = (1, 0)
-        elif direction_num == 3:
-            move = (-1, 0)
-        
-        x = x + (self.speed[0] * move[0]) 
-        y = y + (self.speed[1] * move[1])
-        self.rect_collapse.left = x 
-        self.rect_collapse.top = y
+        pass
 
     def stop(self):
         """Basic stop.
@@ -121,22 +126,21 @@ class BaseEntity(Sprite):
         """
         pass
 
-    def update(self, movement = None):
+    def update(self, direction=None):
         """Update function.
         
         Basic update position of the entity (move or stop)
         Redefine it for your own purpose
         Action use by pygame.sprite.Group.update() function.
         """
-        if movement is None:
+        if direction is None:
             self.stop()
             self.animation.stop()
         else:
-            self.direction = movement
-            self.move(movement)
+            self.move(direction)
             self.animation.update()
         
-        self.setup_animation(self.direction)
+        self.setup_animation(direction)
         self.childs.update()
 
     def setup_collapse(self):
@@ -155,6 +159,11 @@ class BaseEntity(Sprite):
         with rect_collapse
         Catch image.get_rect directly will give you the wrong coordinate
         """
+        if direction is None:
+            if self.direction is None:
+                raise Exception('Direction is not defined')
+            else:
+                direction = self.direction
         self.image = self.animation.get_sprite(direction).convert_alpha()
         rect_anim_position = self.image.get_rect()
         rect_anim_position.center = self.rect_collapse.center
